@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel = "stylesheet" href="style.css">
+        <title>Test Task Weather</title>
+    </head>
+    <body>
+        <div class="table_div">
+            <table id="table">
+                <tr>
+                  <th>City</th>
+                  <th>MinTemp</th>
+                  <th>MaxTemp</th>
+                </tr>
+                <tr>
+                  <td>Berlin</td>
+                  <td id="output_BL_min"></td>
+                  <td id="output_BL_max"></td>
+                </tr>
+                <tr>
+                  <td>Paris</td>
+                  <td id="output_PAR_min"></td>
+                  <td id="output_PAR_max"></td>
+                </tr>
+                <tr>
+                  <td>London</td>
+                  <td id="output_LD_min"></td>
+                  <td id="output_LD_max"></td>
+                </tr>
+              </table>
+              <div class="example_div">Get weather by location coordinates, for example: lat=51.50N&lon=0.11E</div>
+            <div class="input_coord_div">
+                <input id="input" type="text" placeholder="example: lat=51.50N&lon=0.11E" style="width: 190px; border-radius: 4px; border: 1px solid rgb(3, 3, 170);">
+            </div>
+            <div id="addJSONButton_coord"><text>show</text></div>
+            <div id="output_coord_div"></div>
+        </div>
+        <script> 
+
+                /* weather in Berlin */
+
+                fetch("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&timezone=GMT&daily=temperature_2m_min") // min temp 
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){
+                    let temp_min = data.daily.temperature_2m_min
+                    const arr_min = temp_min
+                    const min = arr_min.reduce((a, b) => Math.min(a, b));
+                    console.log(min);
+                    output_BL_min.innerHTML =  min + " \u2103"
+                })
+
+                /*---------max BL-----------*/
+
+                fetch("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&timezone=GMT&daily=temperature_2m_max")
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){
+                                     
+                    let temp_max = data.daily.temperature_2m_max
+
+                    const arr_max = temp_max
+                    const max = arr_max.reduce((a, b) => Math.max(a, b));
+                    console.log(max);
+                    output_BL_max.innerHTML =  max + " \u2103"
+                })
+
+                /* weather in Paris */
+
+                fetch("https://api.open-meteo.com/v1/forecast?latitude=48.51&longitude=2.20&timezone=GMT&daily=temperature_2m_min") // min temp 
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){
+                    let temp_min = data.daily.temperature_2m_min
+                    const arr_min = temp_min
+                    const min = arr_min.reduce((a, b) => Math.min(a, b));
+                    console.log(min);
+                    output_PAR_min.innerHTML =  min + " \u2103"
+                })
+
+                /*---------max PAR-----------*/
+
+                fetch("https://api.open-meteo.com/v1/forecast?latitude=48.51&longitude=2.20&timezone=GMT&daily=temperature_2m_max") // max temp 
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){          
+                    let temp_max = data.daily.temperature_2m_max
+                    const arr_max = temp_max
+                    const max = arr_max.reduce((a, b) => Math.max(a, b));
+                    console.log(max);
+                    output_PAR_max.innerHTML =  max + " \u2103"
+                })
+
+            /* weather in London */
+
+            fetch("https://api.open-meteo.com/v1/forecast?latitude=51.30&longitude=0.7&timezone=GMT&daily=temperature_2m_min") // min temp 
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){
+                    let temp_min = data.daily.temperature_2m_min
+                    const arr_min = temp_min
+                    const min = arr_min.reduce((a, b) => Math.min(a, b));
+                    console.log(min);
+                    output_LD_min.innerHTML =  min + " \u2103"
+                })
+
+                /*---------max LON-----------*/
+
+                fetch("https://api.open-meteo.com/v1/forecast?latitude=51.30&longitude=0.7&timezone=GMT&daily=temperature_2m_max") // max temp 
+                .then(function(response){
+                    return response.json()
+                })
+                .then(function(data){          
+                    let temp_max = data.daily.temperature_2m_max
+                    const arr_max = temp_max
+                    const max = arr_max.reduce((a, b) => Math.max(a, b));
+                    console.log(max);
+                    output_LD_max.innerHTML =  max + " \u2103"
+                })    
+
+            /* weather by coordinates */
+
+            button = document.getElementById("addJSONButton_coord").addEventListener("click", function addJSON () {
+                const str = "https://www.meteosource.com/api/v1/free/point?lat=18.55N&lon=25.48E&sections=current%2Chourly&language=en&units=metric&key=pfp1ln5naya76gpuhq1els5x377liyltedj16scj"
+                let txt = str.split(" ");
+                let addCoordURL = txt.map(i => i.replace(/lat=18.55N&lon=25.48E/, "" + input.value))
+                let url = addCoordURL.join(', ')
+
+            fetch(url)
+            .then(function(response){
+            return response.json()
+            })
+            .then(function(data){
+                console.log(url)
+                let temp = data.current.temperature
+                let timezone = data.timezone
+                output_coord_div.innerHTML = temp + " \u2103" + "; " + "location: " + timezone
+                output_coord_div.style.padding = "5px"
+                output_coord_div.style.border = "1px solid rgb(10, 10, 90)"
+            }) 
+            })
+        </script>    
+    </body>
+</html>
